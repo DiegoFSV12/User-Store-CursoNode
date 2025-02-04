@@ -1,6 +1,6 @@
 import { bcryptAdapter } from "../../config";
 import { UserModel } from "../../data";
-import { CustomError, RegisterUserDTO, UserEntity } from "../../domain";
+import { CustomError, LoginUserDTO, RegisterUserDTO, UserEntity } from "../../domain";
 
 export class AuthService{
     constructor(){}
@@ -17,6 +17,22 @@ export class AuthService{
 
             //Email de confirmación
 
+            const {password, ...userEntity} = UserEntity.fromObject(user);
+            return {
+                user: userEntity,
+                token:'ABC'};
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`);
+        }
+    }
+
+    public async loginUser(loginUserDTO:LoginUserDTO){
+        const existUser = await UserModel.findOne({email:loginUserDTO.email});
+        if(!existUser) throw CustomError.badRequest('User has not registered');
+        const isMatch = bcryptAdapter.compare(loginUserDTO.password,existUser.password);
+        if(!isMatch) throw CustomError.badRequest('Incorrect password');
+        try {
+            const user = new UserModel(existUser);
             const {password, ...userEntity} = UserEntity.fromObject(user);
             return {
                 user: userEntity,
