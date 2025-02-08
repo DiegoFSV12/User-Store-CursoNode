@@ -68,5 +68,7 @@ export class AuthService{
             subject: 'Validate your email',
             htmlBody: html,
         }
+        const isSent = await this.emailService.sendEmail(options);
+        if(!isSent) throw CustomError.internalServer('Error sending email');
     }
 }
