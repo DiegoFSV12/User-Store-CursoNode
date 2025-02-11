@@ -12,12 +12,12 @@ export class jwtAdapter{
             });
         });
     }
-
-    static validateToken(token:string){
+    //T indica que se devolvera un dato del mismo tipo que se indique al llamar a la función
+    static validateToken<T>(token:string): Promise<T|null>{
         return new Promise((resolve)=>{
             jwt.verify(token,JWT_SEED,(err,decoded)=>{
                 if(err) return resolve(null);
-                resolve(decoded);
+                resolve(decoded as T);
             })
         });
     }
