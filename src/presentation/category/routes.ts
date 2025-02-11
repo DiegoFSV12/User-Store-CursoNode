@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { CategoryController } from './controller';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 
 export class CategoryRoutes {
@@ -12,7 +13,7 @@ static get routes(): Router {
 
     // Definir las rutas
     router.get('/', controller.getCategories);
-    router.post('/', controller.createCategory);
+    router.post('/', [AuthMiddleware.validateJWT],controller.createCategory);//Con el AuthMiddleware verificamos que haiga una sesión iniciada mediante el token que se genera
 
 
 
