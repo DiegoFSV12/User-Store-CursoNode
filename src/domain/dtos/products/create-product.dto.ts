@@ -17,11 +17,12 @@ export class CreateProductDTO{
             user,
             category
         } = object;
-        let availableBoolean = available;
         if(!name) return ['Missign name'];
         if(!price) return ['Missign price'];
         if(!user) return ['Missign user'];
         if(!category) return ['Missign category'];
+
+        let availableBoolean = available;
         if(typeof available != 'boolean'){
             availableBoolean = (available === 'true');
         }
