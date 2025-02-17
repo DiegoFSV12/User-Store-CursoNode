@@ -1,3 +1,5 @@
+import { Validators } from "../../../config";
+
 export class CreateProductDTO{
     private constructor(
         public readonly name: string,
@@ -11,7 +13,7 @@ export class CreateProductDTO{
     static create(object:{[key:string]:any}):[string?,CreateProductDTO?]{
         const {
             name,
-            available=false,
+            available,
             price,
             description,
             user,
@@ -20,12 +22,18 @@ export class CreateProductDTO{
         if(!name) return ['Missign name'];
         if(!price) return ['Missign price'];
         if(!user) return ['Missign user'];
+        if(!Validators.isMongoId(user)) return ['Invalid user Id'];
         if(!category) return ['Missign category'];
-
-        let availableBoolean = available;
-        if(typeof available != 'boolean'){
-            availableBoolean = (available === 'true');
-        }
-        return [undefined,new CreateProductDTO(name,availableBoolean,price,description,user,category)];
+        if(!Validators.isMongoId(category)) return ['Invalid category Id'];
+        return [
+            undefined,
+            new CreateProductDTO(
+                name,
+                !!available,
+                price,
+                description,
+                user,
+                category
+            )];
     }
 }
