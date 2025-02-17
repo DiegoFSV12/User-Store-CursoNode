@@ -17,15 +17,18 @@ export class ProductsController{
         return res.status(500).json({error:'Internal Server Error'});
     }
 
-    createProducts = async(req:Request, res:Response) =>{
-        const [error,createProductDTO] = CreateProductDTO.create(req.body);
+    createProducts = (req:Request, res:Response) =>{
+        const [error,createProductDTO] = CreateProductDTO.create({
+            ...req.body,
+            user: req.body.user.id
+        });
         if(error) return res.status(400).json(error);
         this.productService.createProduct(createProductDTO!)
             .then(product => res.status(201).json(product))
             .catch(error => this.handleError(error,res));
     }
 
-    getProducts = async(req:Request, res:Response) =>{
+    getProducts = (req:Request, res:Response) =>{
         const{page=1,limit=10}=req.query;
         const [error, paginationDto] = PaginationDTO.create(Number(page),Number(limit));
         if(error) return res.status(400).json(error);
