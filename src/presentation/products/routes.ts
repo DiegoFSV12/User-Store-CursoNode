@@ -16,7 +16,7 @@ static get routes(): Router {
 
     // Definir las rutas
     router.get('/', controller.getProducts);
-    router.post('/', controller.createProducts);
+    router.post('/', [AuthMiddleware.validateJWT],controller.createProducts);
 
 
 
