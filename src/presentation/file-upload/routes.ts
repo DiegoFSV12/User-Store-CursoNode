@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { FileUploadController } from './controller';
+import { FileUploadService } from '../service/file-upload.service';
 
 
 export class FileUploadRoutes {
@@ -8,7 +9,8 @@ export class FileUploadRoutes {
 static get routes(): Router {
 
     const router = Router();
-    const controller = new FileUploadController();
+    const service = new FileUploadService();
+    const controller = new FileUploadController(service);
 
     // Definir las rutas
     router.post('/single/:type', controller.uploadFile);
