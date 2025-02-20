@@ -18,11 +18,16 @@ export class FileUploadController{
     }
 
     uploadFile = async(req:Request, res:Response) =>{
+        const type = req.params.type;
+        const validTypes = ['users','products','categories'];
+        if(!validTypes.includes(type)){
+            return res.status(400).json({error: `Invalid type: ${type}, valid ones ${validTypes}`});
+        }
         if(!req.files || Object.keys(req.files).length === 0){
             return res.status(400).json({error: 'No files were selected'});
         }
         const file = req.files.file as UploadedFile;
-        this.fileUploadService.uploadFile(file)
+        this.fileUploadService.uploadFile(file,`uploads/${type}`)
             .then(file => res.json(file))
             .catch(error => this.handleError(error,res));
     }
