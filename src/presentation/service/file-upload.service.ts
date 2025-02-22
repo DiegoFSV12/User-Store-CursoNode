@@ -29,6 +29,7 @@ export class FileUploadService{
             this.checkFolder(destination);
             const fileName = `${this.uuid()}.${fileExtension}`;
             file.mv(`${destination}/${fileName}`);
+            return {fileName: fileName};
         } catch (error) {
             console.log(error);
             throw error;
@@ -36,11 +37,14 @@ export class FileUploadService{
     }
 
     async uploadMultipleFile(
-        file: any[],
+        files: UploadedFile[],
         folder: string = 'uploads',
         validExtensions: string[] = ['png','jpg','jpeg','gif']
     ){
-        
+        const fileNames = await Promise.all(
+            files.map(file => this.uploadFile(file,folder,validExtensions))
+        );
+        return fileNames;
     }
 
     
